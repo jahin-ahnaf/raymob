@@ -234,6 +234,13 @@ int GetLastSoftKeyUnicode(void);
 char GetLastSoftKeyChar(void);
 
 /**
+ * @brief Replaces the text used by the soft keyboard input field.
+ *
+ * @param text Text to display in the soft keyboard input field.
+ */
+void SetSoftKeyboardText(const char* text);
+
+/**
  * @brief Clears the record of the last soft key pressed.
  */
 void ClearLastSoftKey(void);

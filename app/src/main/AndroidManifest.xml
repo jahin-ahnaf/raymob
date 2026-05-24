@@ -6,11 +6,9 @@
 
     <!-- Indicates the requirements for this application -->
 
-    <uses-permission android:name="android.permission.INTERNET"
-        android:required="${REQUIRE_INTERNET}" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.VIBRATE"
-        android:required="${REQUIRE_VIBRATION}" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.sensor.gyroscope"
         android:required="${REQUIRE_GYROSCOPE}" />
@@ -29,6 +27,7 @@
         <activity
             android:name=".NativeLoader"
             android:configChanges="keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="${APP_ORIENTATION}" android:launchMode="singleTask"
             android:resizeableActivity="false"
             android:clearTaskOnLaunch="true"

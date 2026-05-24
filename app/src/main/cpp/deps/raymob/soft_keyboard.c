@@ -186,6 +186,29 @@ char GetLastSoftKeyChar(void)
     return '\0';
 }
 
+void SetSoftKeyboardText(const char* text)
+{
+    jobject context = GetNativeLoaderInstance();
+
+    if (context != NULL) {
+        JNIEnv* env = AttachCurrentThread();
+        jclass nativeLoaderClass = (*env)->GetObjectClass(env, context);
+
+        jfieldID softKeyboardField = (*env)->GetFieldID(env, nativeLoaderClass, "softKeyboard", "Lcom/raylib/raymob/SoftKeyboard;");
+        jobject softKeyboard = (*env)->GetObjectField(env, context, softKeyboardField);
+
+        if (softKeyboard != NULL) {
+            jclass softKeyboardClass = (*env)->GetObjectClass(env, softKeyboard);
+            jmethodID method = (*env)->GetMethodID(env, softKeyboardClass, "setKeyboardText", "(Ljava/lang/String;)V");
+            jstring javaText = (*env)->NewStringUTF(env, text != NULL ? text : "");
+            (*env)->CallVoidMethod(env, softKeyboard, method, javaText);
+            (*env)->DeleteLocalRef(env, javaText);
+        }
+
+        DetachCurrentThread();
+    }
+}
+
 void ClearLastSoftKey(void)
 {
     jobject context = GetNativeLoaderInstance();

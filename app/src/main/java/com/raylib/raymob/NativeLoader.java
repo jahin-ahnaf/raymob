@@ -25,13 +25,19 @@
 package com.raylib.raymob;  // Don't change the package name (see gradle.properties)
 
 import android.app.NativeActivity;
+import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 
 public class NativeLoader extends NativeActivity {
 
     public DisplayManager displayManager;
     public SoftKeyboard softKeyboard;
+    public EditText hiddenInput;
     public boolean initCallback = false;
 
     // Loading method of your native application
@@ -39,7 +45,20 @@ public class NativeLoader extends NativeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         displayManager = new DisplayManager(this);
-        softKeyboard = new SoftKeyboard(this);
+        hiddenInput = new EditText(this);
+        hiddenInput.setLayoutParams(new ViewGroup.LayoutParams(1, 1));
+        hiddenInput.setFocusable(true);
+        hiddenInput.setFocusableInTouchMode(true);
+        hiddenInput.setCursorVisible(false);
+        hiddenInput.setSingleLine(true);
+        hiddenInput.setText("");
+        hiddenInput.setVisibility(View.VISIBLE);
+        hiddenInput.setAlpha(0f);
+        hiddenInput.setBackground(null);
+        hiddenInput.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_FLAG_NO_FULLSCREEN);
+        hiddenInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        addContentView(hiddenInput, new ViewGroup.LayoutParams(1, 1));
+        softKeyboard = new SoftKeyboard(this, hiddenInput);
         System.loadLibrary("raymob");   // Load your game library (don't change raymob, see gradle.properties)
     }
 
@@ -56,7 +75,7 @@ public class NativeLoader extends NativeActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         softKeyboard.onKeyUpEvent(event);
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyUp(keyCode, event);
     }
 
     @Override
